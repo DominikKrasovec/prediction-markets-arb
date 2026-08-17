@@ -1,0 +1,78 @@
+@startuml
+' ---------------------------------------------------------------------------
+' Visokonivojski arhitekturni diagram (poglavje 4).
+' Kratka besedila; legenda barv je v podnapisu slike v thesis.tex.
+' Render: java -jar plantuml.jar -charset UTF-8 visokonivojska-arhitektura.puml
+' ---------------------------------------------------------------------------
+skinparam shadowing false
+skinparam defaultFontName Helvetica
+skinparam dpi 180
+skinparam nodesep 25
+skinparam ranksep 35
+skinparam roundCorner 10
+skinparam defaultFontSize 19
+skinparam ArrowFontSize 15
+skinparam rectangle {
+  BackgroundColor<<svc>>   #E8F2E8
+  BorderColor<<svc>>       #4C8C4A
+  BackgroundColor<<venue>> #F3F3F3
+  BorderColor<<venue>>     #777777
+  BackgroundColor<<cache>> #FFE9D6
+  BorderColor<<cache>>     #B8860B
+  BackgroundColor<<live>>  #FFE9D6
+  BorderColor<<live>>      #B8860B
+}
+skinparam queue {
+  BackgroundColor<<bus>>   #EEE6F5
+  BorderColor<<bus>>       #6A4C93
+}
+skinparam database {
+  BackgroundColor          #E6F2F2
+  BorderColor              #2C7A7B
+}
+
+queue "**Dogodkovno vodilo**\nSSE, ločeni kanali po temah" as BUS <<bus>>
+
+package "Zunanje platforme" {
+  rectangle "**Kalshi**\n(CFTC)" as KAL <<venue>>
+  rectangle "**Polymarket**\n(on-chain)" as POL <<venue>>
+  rectangle "**Predict**\n(on-chain)" as PRE <<venue>>
+  rectangle "**Limitless**\n(on-chain)" as LIM <<venue>>
+}
+
+rectangle "**Zajem** (ingestion)\n4 zajemalniki REST,\nnadzor cikla WSS" as ING <<svc>>
+rectangle "**Cevovod** (pipeline)\nstopnje 1–4: normalizacija,\nidentiteta, struktura Ω" as PIPE <<svc>>
+rectangle "**Detektor arbitraže**\nLP nad Ω (HiGHS WASM)\nnad cenami CLOB" as SOLVER <<svc>>
+
+rectangle "**Pomnilnik cen**\n(v pomnilniku, obide bazo)" as CACHE <<cache>>
+
+database "**PostgreSQL + pgvector**\n//samo logična struktura,//\n//brez cen v realnem času//\n(tabele: slika ER, pogl. 6)" as DB
+
+rectangle "**Knjige naročil (CLOB)**\n4 adapterji WSS/REST,\nlokalna rekonstrukcija L2" as FEED <<live>>
+
+' 2x2 razporeditev platform
+KAL -[hidden]right- POL
+PRE -[hidden]right- LIM
+KAL -[hidden]down-  PRE
+POL -[hidden]down-  LIM
+
+' ----- podatkovni tok (polna crta) -----
+KAL --> ING
+POL --> ING
+PRE --> ING
+LIM --> ING
+ING --> DB : surovi trgi
+PIPE --> DB : bere / piše
+SOLVER --> DB : piše priložnosti
+
+' ----- zivi feed (krepko, MIMO baze) -----
+FEED -[#B8860B,thickness=3]-> CACHE : cene v živo (L2)
+CACHE -[#B8860B,thickness=3]-> SOLVER
+
+' ----- dogodki (crtkano) preko vodila -----
+ING ..> BUS : markets:synced
+BUS ..> PIPE
+PIPE ..> BUS : graph_updated
+BUS ..> SOLVER
+SOLVER ..> BUS : arb:detected
+@enduml

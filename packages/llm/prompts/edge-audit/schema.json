@@ -1,0 +1,30 @@
+{
+  "type": "object",
+  "required": ["audits"],
+  "properties": {
+    "audits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["edge_id", "relationship", "confidence", "reasoning"],
+        "properties": {
+          "edge_id":      { "type": "integer" },
+          "relationship": {
+            "type": "string",
+            "enum": [
+              "strict_implication_AtoB",
+              "strict_implication_BtoA",
+              "mutual_exclusion",
+              "near_equivalence",
+              "independent",
+              "conditional"
+            ]
+          },
+          "confidence":   { "type": "number", "minimum": 0, "maximum": 1 },
+          "concern":      { "anyOf": [{ "type": "string" }, { "type": "null" }] },
+          "reasoning":    { "type": "string" }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,92 @@
+@startuml
+' ---------------------------------------------------------------------------
+' ER diagram, 2. del (poglavje 6): raven dogodkov in projekcija za detektor
+' (stopnje 2-4). Tabela markets je za kontekst prikazana okrnjeno.
+' Render: java -jar plantuml.jar -charset UTF-8 er-podatkovni-model-b.puml
+' ---------------------------------------------------------------------------
+title Podatkovni model (2/2): raven dogodkov\nin projekcija za detektor (stopnje 2–4)
+
+skinparam shadowing false
+skinparam defaultFontName Helvetica
+skinparam dpi 180
+skinparam linetype ortho
+skinparam roundCorner 8
+skinparam packageStyle rectangle
+skinparam entityFontSize 18
+skinparam defaultFontSize 18
+skinparam nodesep 60
+skinparam ranksep 30
+skinparam ArrowFontSize 17
+skinparam titleFontSize 20
+hide circle
+hide empty methods
+
+skinparam package {
+  BackgroundColor #FFFFFF
+  BorderColor #999999
+  FontStyle bold
+}
+
+entity "**markets** (stopnja 0)" as markets {
+  * id <<PK>>
+}
+
+package "Stopnji 2-3: identiteta dogodkov" as P23 #F0F5FA {
+  entity "**platform_events**" as pe {
+    * id <<PK>>
+    --
+    platform, grouping_type
+    canonical_subject,
+    canonical_event
+    condition_date
+  }
+  entity "**semantic_events**\n(medplatformni dogodek)" as se {
+    * id <<PK>>
+    --
+    canonical_event
+    grouping_kind
+  }
+  entity "**semantic_event_legs**\n(preslikava izidov)" as sel {
+    * id <<PK>>
+    --
+    outcome_id,
+    outcome_label
+    market_id <<FK>>
+  }
+}
+
+package "Stopnja 4: projekcija za detektor" as P4 #FBF0F0 {
+  entity "**questions**\n(vozlišča izidov)" as q {
+    * id <<PK>>
+    --
+    canonical_key
+    condition_shape,
+    condition_value
+    outcome_role
+  }
+  entity "**outcome_sets**\n(množice izidov)" as os {
+    * id <<PK>>
+    --
+    set_type
+    is_exhaustive
+    (Σ=1 / Σ≤1)
+  }
+  entity "**implication_edges**\n(logične povezave)" as ie {
+    * antecedent <<FK>>,
+    consequent <<FK>>
+    --
+    edge_type, pattern
+  }
+}
+
+P23 -[hidden]down- P4
+
+markets }o-down-o| pe : "pripada dogodku"
+markets ||-down-o{ sel
+pe }o--right--o{ se
+se ||--right--o{ sel
+
+markets ||-down-|{ q
+os ||--right--o{ q
+q  ||-down-o{ ie
+@enduml

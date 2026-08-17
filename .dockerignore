@@ -1,0 +1,10 @@
+node_modules
+**/node_modules
+**/dist
+**/.next
+**/*.tsbuildinfo
+docker/pgdata
+.git
+.env
+*.har
+*.log

@@ -1,0 +1,36 @@
+{
+  "type": "object",
+  "properties": {
+    "regex": { "type": "string" },
+    "flags": { "type": "string" },
+    "named_groups": { "type": "array", "items": { "type": "string" } },
+    "field_mapping": {
+      "type": "object",
+      "properties": {
+        "subject_raw": { "type": "string" },
+        "participants_raw": { "type": "array", "items": { "type": "string" } },
+        "value_primary_raw": { "type": "string" },
+        "value_secondary_raw": { "type": "string" },
+        "value_unit_const": { "type": "string" },
+        "value_unit_group": { "type": "string" },
+        "condition_direction_from_group": { "type": "string" },
+        "outcome_label_const": { "type": "string" },
+        "condition_date_group": { "type": "string" }
+      }
+    },
+    "condition_shape": {
+      "type": "string",
+      "enum": ["binary_event", "monotonic_threshold", "range_snapshot", "point_in_time", "categorical_outcome"]
+    },
+    "event_kind": { "type": "string" },
+    "value_unit_post": {
+      "type": "object",
+      "additionalProperties": { "type": "number" }
+    },
+    "platforms": { "type": "array", "items": { "type": "string" } },
+    "category_unified": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
+    "expected_match_rate": { "type": "number", "minimum": 0, "maximum": 1 },
+    "notes": { "type": "string" }
+  },
+  "required": ["regex", "flags", "named_groups", "field_mapping", "expected_match_rate", "notes"]
+}

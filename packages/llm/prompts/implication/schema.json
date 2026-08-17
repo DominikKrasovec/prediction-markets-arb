@@ -1,0 +1,29 @@
+{
+  "type": "object",
+  "properties": {
+    "relationship": {
+      "type": "string",
+      "enum": [
+        "equivalent",
+        "strict_implication_AtoB",
+        "strict_implication_BtoA",
+        "conditional",
+        "mutual_exclusion",
+        "independent"
+      ]
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "reasoning": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "relationship",
+    "confidence",
+    "reasoning"
+  ]
+}

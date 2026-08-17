@@ -1,0 +1,78 @@
+x-logging: &default-logging
+  driver: "json-file"
+  options:
+    max-size: "100m"
+    max-file: "3"
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: prediction-arb-pg
+    restart: unless-stopped
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: prediction_arb
+      POSTGRES_USER: arb
+      POSTGRES_PASSWORD: arb_local_dev
+    shm_size: "2gb"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U arb -d prediction_arb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    logging: *default-logging
+
+  event-bus:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    command: node services/event-bus/dist/index.js
+    ports:
+      - "3100:3100"
+    env_file: ../.env
+    environment:
+      EVENT_BUS_PORT: "3100"
+    logging: *default-logging
+  #
+  # ingestion:
+  #   build:
+  #     context: ..
+  #     dockerfile: docker/Dockerfile
+  #   command: node services/ingestion/dist/index.js
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #   env_file: ../.env
+  #
+  # pipeline:
+  #   build:
+  #     context: ..
+  #     dockerfile: docker/Dockerfile
+  #   command: node services/pipeline/dist/index.js
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #     event-bus:
+  #       condition: service_started
+  #   env_file: ../.env
+  #
+  # dashboard:
+  #   build:
+  #     context: ..
+  #     dockerfile: docker/Dockerfile
+  #   command: npx next start services/dashboard --port 3333
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #     pipeline:
+  #       condition: service_started
+  #   ports:
+  #     - "3333:3333"
+  #   env_file: ../.env
+
+volumes:
+  pgdata:

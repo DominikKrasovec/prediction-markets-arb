@@ -1,0 +1,34 @@
+{
+  "name": "@arb/ingestion",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun --watch src/index.ts",
+    "start": "node dist/index.js",
+    "build": "tsc --build",
+    "scrape:polymarket": "bun src/scrapers/polymarket/index.ts",
+    "scrape:predict": "bun src/scrapers/predict/index.ts",
+    "scrape:kalshi": "cd ../.. && bun services/ingestion/src/scrapers/kalshi/scraper.ts",
+    "scrape:kalshi:all": "cd ../.. && bun services/ingestion/src/scrapers/kalshi/scraper.ts --all",
+    "scrape:limitless": "bun src/scrapers/limitless/scraper.ts",
+    "scrape:all": "bun src/scrapers/run-all.ts",
+    "bench:lifecycle": "cd ../.. && bun services/ingestion/src/bench/run-bench.ts"
+  },
+  "dependencies": {
+    "@arb/db": "*",
+    "@arb/event-bus": "*",
+    "@arb/kalshi-auth": "*",
+    "@arb/logger": "*",
+    "@arb/resolution-write": "*",
+    "@arb/types": "*",
+    "axios": "^1.13.4",
+    "dotenv": "^17.2.3",
+    "kalshi-typescript": "^3.13.0",
+    "socket.io-client": "^4.8.3",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.5.13"
+  }
+}

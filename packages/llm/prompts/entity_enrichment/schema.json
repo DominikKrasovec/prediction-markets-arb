@@ -1,0 +1,73 @@
+{
+  "type": "object",
+  "properties": {
+    "entities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "canonical_corrected": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "person",
+              "organization",
+              "team",
+              "asset",
+              "location",
+              "event_name",
+              "league",
+              "sport",
+              "competition",
+              "data_provider",
+              "unknown"
+            ]
+          },
+          "aliases": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "new_sport_aliases": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "OPTIONAL. Emit ONLY when metadata.sport_canonical is a value not in known_sports. 2-5 alternate spellings the worker registers as aliases on a new level-1 'sport' entity. Sports have no parent in the hierarchy (their parent is the entity's domain_category, already known) so no extra context fields are needed."
+          },
+          "new_league_aliases": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "OPTIONAL. Emit ONLY when metadata.league_canonical is a value not in known_leagues. 2-5 alternate spellings registered as aliases on a new level-1 'league' entity. REQUIREMENT: metadata.sport_canonical MUST also be set when this is emitted — the new league row inherits sport_canonical so the KB hierarchy domain → sport → league stays connected. Tennis example (tour-SPLIT — never the fused 'ATP/WTA', the tours are separate non-mutex leagues): metadata={league_canonical:'ATP Tour', sport_canonical:'tennis'}, new_league_aliases=['ATP','atp tour']; WTA entities use the separate 'WTA Tour' league, and when the tour is unknown OMIT league_canonical."
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "notes": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "canonical_corrected",
+          "type",
+          "aliases",
+          "metadata",
+          "confidence"
+        ]
+      }
+    }
+  },
+  "required": [
+    "entities"
+  ]
+}

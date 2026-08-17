@@ -1,0 +1,9 @@
+# Bun configuration for the pipeline service.
+#
+# `bun test` walks the workspace and runs every file matching `*.test.{ts,js}`
+# by default. Without `testIgnore`, the compiled mirrors in `dist/` (produced
+# by `tsc`) get picked up as a second copy of every `src/**/*.test.ts` test
+# and run alongside the source. We want one test run per test, against the
+# source — so ignore the build output entirely.
+[test]
+testIgnore = ["dist/**"]

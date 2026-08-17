@@ -1,0 +1,70 @@
+@startuml
+' ---------------------------------------------------------------------------
+' Konkreten primer medplatformnega zdruzevanja (poglavje 6).
+' Resnicen primer iz zajetih podatkov: tekma SP 2026 Anglija - Gana
+' (23. jun. 2026), Kalshi serija KXWCGAME-26JUN23ENGGHA + Polymarket negRisk.
+' Pokoncna postavitev: trije stolpci izidov, navpicni tok navzdol.
+' Render: java -jar plantuml.jar -charset UTF-8 primer-zdruzevanja.puml
+' ---------------------------------------------------------------------------
+title Primer združevanja: Anglija : Gana\n(SP v nogometu 2026, 23. junij 2026)
+
+skinparam shadowing false
+skinparam defaultFontName Helvetica
+skinparam dpi 180
+skinparam linetype ortho
+skinparam roundCorner 8
+skinparam rectangleFontSize 17
+skinparam ArrowFontSize 15
+skinparam titleFontSize 19
+skinparam legendFontSize 15
+' Barve platform sledijo znamki: Polymarket modra (#1652F0), Kalshi zelena (#00A868).
+' Pripadnost platformi je zakodirana ENKRAT -- s stereotipom na vozlu; legende
+' namenoma ni, da ista informacija ni podvojena.
+skinparam rectangle {
+  BackgroundColor<<Polymarket>>   #D9E5FB
+  BorderColor<<Polymarket>>       #1240B8
+  BackgroundColor<<Kalshi>>       #CCEBDD
+  BorderColor<<Kalshi>>           #00754A
+}
+
+' --- stolpec: Anglija -------------------------------------------------------
+rectangle "»England«\n0xff1ec56e…" <<Polymarket>> as pm_eng
+rectangle "…ENGGHA-**ENG**\n»England wins?«" <<Kalshi>> as ka_eng
+rectangle "vozlišče q1523\n**»Anglija zmaga«**\n2 člana (PM + Kalshi)" as q_eng #EFEFEF;line:6E6E6E
+
+' --- stolpec: Gana ----------------------------------------------------------
+rectangle "»Ghana«\n0x66b7ad48…" <<Polymarket>> as pm_gha
+rectangle "…ENGGHA-**GHA**\n»Ghana wins?«" <<Kalshi>> as ka_gha
+rectangle "vozlišče q1524\n**»Gana zmaga«**\n2 člana (PM + Kalshi)" as q_gha #EFEFEF;line:6E6E6E
+
+' --- stolpec: neodloceno ----------------------------------------------------
+rectangle "»Draw«\n0x17d821a9…" <<Polymarket>> as pm_tie
+rectangle "…ENGGHA-**TIE**\n»Tie?«" <<Kalshi>> as ka_tie
+rectangle "vozlišče q1522\n**»neodločeno«**\n2 člana (PM + Kalshi)" as q_tie #EFEFEF;line:6E6E6E
+
+rectangle "množica izidov (outcome_set)\n**»Anglija : Gana, 23. 6. 2026«**\ncategorical, is_exhaustive = TRUE\n(Σ = 1: natanko en izid)" as oset #F5EFDA;line:B8962E
+
+' --- tok navzdol po stolpcih ------------------------------------------------
+pm_eng -down-> q_eng
+ka_eng -down-> q_eng
+pm_gha -down-> q_gha
+ka_gha -down-> q_gha
+pm_tie -down-> q_tie
+ka_tie -down-> q_tie
+
+q_eng -down-> oset : slot 1
+q_gha -down-> oset : slot 2
+q_tie -down-> oset : slot 3
+
+' navpicno: PM nad Kalshijem v vsakem stolpcu; stolpci poravnani vodoravno
+pm_eng -[hidden]down- ka_eng
+pm_gha -[hidden]down- ka_gha
+pm_tie -[hidden]down- ka_tie
+pm_eng -[hidden]right- pm_gha
+pm_gha -[hidden]right- pm_tie
+
+' Rumene opombe (note bottom of oset) ni vec: njena vsebina -- razresitev
+' subjektov v bazi znanja in obe vrsti arbitraze, ki iz slike sledita -- je
+' povedana v besedilu takoj za sliko (poglavje 6), zato je v diagramu ne
+' podvajamo.
+@enduml

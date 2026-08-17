@@ -1,0 +1,45 @@
+@startuml
+' ---------------------------------------------------------------------------
+' Cevovod (poglavje 5): deterministicno-prvi tok, LLM samo na stopnji 3b.
+' En navpicni tok (kot prvotna razlicica), vrstice <= ~40 znakov, vecje pisave.
+' Legenda barv je v podnapisu slike (caption) v thesis.tex.
+' Render: java -jar plantuml.jar -charset UTF-8 plantuml-diagram-cevovoda.puml
+' ---------------------------------------------------------------------------
+skinparam shadowing false
+skinparam defaultFontName Helvetica
+skinparam dpi 180
+skinparam ranksep 25
+hide stereotype
+skinparam roundCorner 10
+skinparam ArrowColor #333333
+skinparam defaultFontSize 19
+skinparam ArrowFontSize 18
+skinparam rectangle {
+  BackgroundColor<<det>>    #E8F2E8
+  BorderColor<<det>>        #4C8C4A
+  BackgroundColor<<embed>>  #E8EEF7
+  BorderColor<<embed>>      #3A6EA5
+  BackgroundColor<<llm>>    #FBE9E7
+  BorderColor<<llm>>        #C0392B
+  BackgroundColor<<solver>> #FFF4D6
+  BorderColor<<solver>>     #B8860B
+}
+
+rectangle "**VHOD: surovi trgi s 4 platform**\nKalshi ~65 %, Polymarket ~31 %;\nkriptovalute ~48 %, šport ~35 %" as IN <<det>>
+rectangle "**STOPNJA 0 — zajem in sinhronizacija**\n4 zajemalniki + nadzor cikla WSS\n+ nadzornik zaključevanja trgov" as S0 <<det>>
+rectangle "**STOPNJA 1 — deterministična**\n**normalizacija** (regularni izrazi)\npredloge + razreševanje entitet (KB);\nizhod: kartica pogojev" as S1 <<det>>
+rectangle "**STOPNJA 2 — dogodkovni sloj**\n(deterministično + vložitve OpenAI)\nidentiteta dogodka iz lastnih polj" as S2 <<embed>>
+rectangle "**STOPNJA 3a — kandidati ANN**\nmedplatformna samopovezava pgvector\n+ deterministični potrjevalniki" as S3A <<embed>>
+rectangle "**STOPNJA 3b — ujemanje z LLM**\n(edini klic LLM med živim obratovanjem)\n1 klic DeepSeek na preostali par" as S3B <<llm>>
+rectangle "**STOPNJA 4 — deterministična**\n**finalizacija** (brez LLM)\nprojekcija v vozlišča, množice in robove" as S4 <<det>>
+rectangle "**detektor arbitraže** (arb-solver)\nLP nad Ω v realnem času;\narbitraža ⟸ najnižja cena < 1 $ − ε" as SOLVER <<solver>>
+
+IN  -down-> S0
+S0  -down-> S1
+S1  -down-> S2
+S2  -down-> S3A
+S3A -down-> S3B : preostali pari
+S3B -down-> S4
+S3A ..> S4 : čisti pari
+S4  -down-> SOLVER : graph_updated
+@enduml

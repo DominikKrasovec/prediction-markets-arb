@@ -1,0 +1,84 @@
+@startuml
+' ---------------------------------------------------------------------------
+' ER diagram, 1. del (poglavje 6): raven trgov - stopnji 0 in 1.
+' Render: java -jar plantuml.jar -charset UTF-8 er-podatkovni-model-a.puml
+' ---------------------------------------------------------------------------
+title Podatkovni model (1/2): raven trgov\n(stopnji 0 in 1)
+
+skinparam shadowing false
+skinparam defaultFontName Helvetica
+skinparam dpi 180
+skinparam linetype ortho
+skinparam roundCorner 8
+skinparam packageStyle rectangle
+skinparam entityFontSize 18
+skinparam defaultFontSize 18
+skinparam nodesep 60
+skinparam ranksep 30
+skinparam ArrowFontSize 17
+skinparam titleFontSize 20
+hide circle
+hide empty methods
+
+skinparam package {
+  BackgroundColor #FFFFFF
+  BorderColor #999999
+  FontStyle bold
+}
+
+package "Stopnja 0: zajem" as P0 #F7FBF7 {
+  entity "**market_metadata_raw**" as mmr {
+    * market_id <<PK,FK>>
+    --
+    raw : JSONB
+  }
+  entity "**markets**" as markets {
+    * id <<PK>>
+    --
+    platform, platform_id
+    title, category,
+    end_date
+    grouping_type
+  }
+  entity "**market_cross_refs**" as mcr {
+    * source_market_id <<FK>>
+    --
+    target_platform,
+    target_id
+  }
+}
+
+package "Stopnja 1: normalizacija + baza znanja" as P1 #FDF9F0 {
+  entity "**llm_market_normalizations**\n(kartica pogojev)" as lmn {
+    * market_id <<PK,FK>>
+    --
+    canonical_subject,
+    canonical_event
+    condition_shape,
+    condition_direction
+    value_primary, value_unit
+  }
+  entity "**known_entities**\n(baza znanja)" as ke {
+    * id <<PK>>
+    --
+    canonical, type,
+    aliases
+    sport_canonical,
+    league_canonical
+  }
+  entity "**market_entity_links**" as mel {
+    * market_id <<FK>>,
+    entity_id <<FK>>
+    --
+    is_subject
+  }
+}
+
+P0 -[hidden]down- P1
+
+mmr  |o--right--|| markets
+markets ||--right--o{ mcr
+markets ||--down--o| lmn : "normalizacija"
+markets ||-down-o{ mel
+ke ||--right--o{ mel
+@enduml

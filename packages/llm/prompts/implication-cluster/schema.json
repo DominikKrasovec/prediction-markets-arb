@@ -1,0 +1,48 @@
+{
+  "type": "object",
+  "properties": {
+    "pairs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "q1_id": {
+            "type": "integer"
+          },
+          "q2_id": {
+            "type": "integer"
+          },
+          "relationship": {
+            "type": "string",
+            "enum": [
+              "equivalent",
+              "strict_implication_AtoB",
+              "strict_implication_BtoA",
+              "conditional",
+              "mutual_exclusion",
+              "independent"
+            ]
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "reasoning": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "q1_id",
+          "q2_id",
+          "relationship",
+          "confidence",
+          "reasoning"
+        ]
+      }
+    }
+  },
+  "required": [
+    "pairs"
+  ]
+}

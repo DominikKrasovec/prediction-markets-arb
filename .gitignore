@@ -1,0 +1,25 @@
+# Dependencies / builds
+node_modules/
+dist/
+.next/
+*.tsbuildinfo
+package-lock.json
+
+# Environment / secrets
+*.env
+.env
+secrets/
+
+# Logs and local artifacts
+*.log
+*.har
+/logs
+data/geo-compare/
+replay/
+replay-all/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

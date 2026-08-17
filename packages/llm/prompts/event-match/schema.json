@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "EventMatchResult",
+  "type": "object",
+  "required": ["same_event", "confidence", "reasoning"],
+  "additionalProperties": false,
+  "properties": {
+    "same_event": { "type": "boolean" },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "reasoning": { "type": "string", "minLength": 1, "maxLength": 1000 },
+
+    "canonical_event": { "type": "string" },
+    "canonical_subject": { "type": ["string", "null"] },
+    "participants": { "type": "array", "items": { "type": "string" } },
+
+    "grouping_kind": {
+      "type": "string",
+      "enum": ["categorical_exclusive", "threshold_series", "bundle_nonexclusive"]
+    },
+
+    "outcome_set": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["outcome_id", "label"],
+        "additionalProperties": false,
+        "properties": {
+          "outcome_id": { "type": "string", "pattern": "^[a-z0-9_]+$" },
+          "label": { "type": "string" },
+          "outcome_subject": { "type": ["string", "null"] },
+          "is_residual": { "type": "boolean", "default": false },
+          "ordinal": { "type": ["integer", "null"], "default": null }
+        }
+      }
+    },
+
+    "leg_mapping": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["outcome_id", "platform", "market_id"],
+        "additionalProperties": false,
+        "properties": {
+          "outcome_id": { "type": "string" },
+          "platform": { "type": "string", "enum": ["kalshi", "polymarket", "predict", "limitless"] },
+          "market_id": { "type": "integer", "minimum": 1 }
+        }
+      }
+    },
+
+    "completeness": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "a_complete": { "type": "boolean" },
+        "b_complete": { "type": "boolean" },
+        "notes": { "type": "string" }
+      }
+    },
+
+    "deadline_window_iso": {
+      "type": "array",
+      "items": { "type": "string", "format": "date-time" },
+      "minItems": 2,
+      "maxItems": 2
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "same_event": { "const": true } } },
+      "then": { "required": ["grouping_kind", "outcome_set", "leg_mapping"] }
+    }
+  ]
+}

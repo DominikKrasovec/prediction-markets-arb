@@ -1,0 +1,112 @@
+[
+  {
+    "input": {
+      "title": "Will Bitcoin reach $200,000 by March 31, 2026?",
+      "description": "Resolves YES if BTC/USD trades at or above $200,000 on any major exchange before March 31, 2026 23:59 UTC.",
+      "outcomes": ["Yes", "No"],
+      "categoryHint": "crypto",
+      "endDate": "2026-03-31"
+    },
+    "output": {
+      "index": 1,
+      "canonical_entities": ["BTC"],
+      "entity_types": { "BTC": "asset" },
+      "entity_aliases": { "BTC": ["Bitcoin", "BTC/USD", "bitcoin", "XBT"] },
+      "dates": [{ "label": "Target deadline", "date": "2026-03-31", "type": "deadline" }],
+      "category_unified": "crypto",
+      "keywords": ["Bitcoin", "BTC", "price", "200000", "crypto", "2026", "Q1"],
+      "outcome_space": "binary",
+      "resolution_source": "Major cryptocurrency exchanges",
+      "hierarchy_type": "numeric_threshold",
+      "hierarchy_level": 1,
+      "hierarchy_series": "BTC Price Target 2026",
+      "hierarchy_value": "200000",
+      "hierarchy_direction": "ascending",
+      "condition_shape": "monotonic_threshold",
+      "condition_direction": "above",
+      "condition_metric": "price",
+      "temporal_semantics": "by_date",
+      "value_primary": 200000,
+      "value_secondary": null,
+      "value_unit": "USD",
+      "participants": ["BTC"],
+      "canonical_event": "BTC price reaches threshold",
+      "confidence": 0.98
+    }
+  },
+  {
+    "input": {
+      "title": "Will Trump visit China by December 2026?",
+      "description": "Resolves YES if Donald Trump makes an official presidential visit to mainland China before December 31, 2026.",
+      "outcomes": ["Yes", "No"],
+      "categoryHint": "geopolitical",
+      "endDate": "2026-12-31"
+    },
+    "output": {
+      "index": 1,
+      "canonical_entities": ["Donald Trump", "China"],
+      "entity_types": { "Donald Trump": "person", "China": "location" },
+      "entity_aliases": { "Donald Trump": ["Trump", "DJT", "President Trump"], "China": ["PRC", "People's Republic of China", "mainland China"] },
+      "dates": [{ "label": "Deadline", "date": "2026-12-31", "type": "deadline" }],
+      "category_unified": "geopolitical",
+      "keywords": ["Trump", "China", "visit", "2026", "diplomatic", "presidential"],
+      "outcome_space": "binary",
+      "resolution_source": "Official government announcements",
+      "hierarchy_type": "date_threshold",
+      "hierarchy_level": 1,
+      "hierarchy_series": "Trump China Visit 2026",
+      "hierarchy_value": "2026-12-31",
+      "hierarchy_direction": "ascending",
+      "condition_shape": "cumulative_deadline",
+      "condition_direction": null,
+      "condition_metric": "boolean",
+      "temporal_semantics": "by_date",
+      "value_primary": null,
+      "value_secondary": null,
+      "value_unit": null,
+      "participants": ["China", "Donald Trump"],
+      "canonical_event": "visit China",
+      "confidence": 0.95
+    }
+  },
+  {
+    "input": {
+      "title": "Spread: St. Thomas (-9.5)",
+      "description": "Resolves YES if St. Thomas (MN) Tommies win by more than 9.5 points.",
+      "outcomes": ["St. Thomas (MN) Tommies", "Cal State Fullerton Titans"],
+      "eventTitle": "St. Thomas (MN) Tommies vs. Cal State Fullerton Titans",
+      "slug": "ncaab-stmn-csuf-2026-03-12-spread-9pt5",
+      "categoryHint": "sports",
+      "endDate": "2026-03-12"
+    },
+    "output": {
+      "index": 1,
+      "canonical_entities": ["St. Thomas Tommies", "Cal State Fullerton Titans"],
+      "entity_types": { "St. Thomas Tommies": "team", "Cal State Fullerton Titans": "team" },
+      "entity_aliases": {
+        "St. Thomas Tommies": ["St. Thomas (MN) Tommies", "St. Thomas", "Tommies", "STMN"],
+        "Cal State Fullerton Titans": ["Cal State Fullerton", "CSUF", "Fullerton Titans"]
+      },
+      "dates": [{ "label": "Tip-off", "date": "2026-03-12", "type": "event" }],
+      "category_unified": "sports",
+      "keywords": ["NCAAB", "spread", "St. Thomas", "Cal State Fullerton", "9.5"],
+      "outcome_space": "binary",
+      "resolution_source": "Official NCAA box score",
+      "hierarchy_type": "spread",
+      "hierarchy_level": 1,
+      "hierarchy_series": "St. Thomas vs Cal State Fullerton spread",
+      "hierarchy_value": "9.5",
+      "hierarchy_direction": "ascending",
+      "condition_shape": "spread",
+      "condition_direction": "above",
+      "condition_metric": "margin",
+      "temporal_semantics": "at_event",
+      "value_primary": 9.5,
+      "value_secondary": null,
+      "value_unit": "points",
+      "participants": ["St. Thomas Tommies", "Cal State Fullerton Titans"],
+      "canonical_event": "St. Thomas covers spread vs Cal State Fullerton",
+      "confidence": 0.92
+    }
+  }
+]

@@ -1,0 +1,46 @@
+@startuml
+' ---------------------------------------------------------------------------
+' Celovit primer od zacetka do konca (poglavje 1) na resnicnem primeru:
+' volitve v predstavniski dom ZDA 2026, okrozje NC-10 (Severna Karolina).
+' Zajeto 18. jun. 2026 med testnim zagonom detektorja na zivih podatkih.
+' Pokoncna postavitev: 2 stolpca x 3 vrstice, malo besedila na okvir.
+' Render: java -jar plantuml.jar -charset UTF-8 celovit-primer.puml
+' ---------------------------------------------------------------------------
+title Celovit primer: okrožje NC-10\nod surovih podatkov do arbitražnega portfelja
+
+skinparam shadowing false
+skinparam defaultFontName Helvetica
+skinparam dpi 180
+skinparam roundCorner 10
+skinparam rectangleFontSize 16
+skinparam ArrowFontSize 14
+skinparam titleFontSize 19
+skinparam rectangle {
+  BackgroundColor<<step>> #F7FBF7
+  BorderColor<<step>>     #4C8C4A
+  BackgroundColor<<res>>  #FFF3E0
+  BorderColor<<res>>      #B8860B
+}
+
+rectangle "**1. Zajem surovih trgov**\n//stopnja 0//\n==\nKalshi: lestvica razlike zmage\n(≥ 4, ≥ 7, …, ≥ 28 odst. točk)\nin binarni trg zmagovalca\n\nPolymarket: dogodek negRisk\n(»Republican« / »Democratic«)" <<step>> as K1
+
+rectangle "**2. Normalizacija**\n//stopnja 1//\n==\nkartici pogojev (regularni izrazi):\n»razlika zmage ≥ 4 odst. točke«\n»republikanec zmaga«" <<step>> as K2
+
+rectangle "**3. Identiteta dogodkov**\n//stopnji 2–3//\n==\ndogodka povezana medplatformno:\nlestvica pragov +\nkategorična množica izidov" <<step>> as K3
+
+rectangle "**4. Projekcija strukture**\n//stopnja 4//\n==\n18 vozlov izidov, 2 množici,\nlogična robova (filtra stanj):\nrazlika ≥ 4 ⟹ R zmaga\nrazlika ≥ 7 ⟹ razlika ≥ 4" <<step>> as K4
+
+rectangle "**5. Ω in linearni program**\n//reševalnik//\n==\nΩ: 25 dopustnih stanj\nLP: najcenejši portfelj z\nizplačilom ≥ 1 $ v vsakem stanju" <<step>> as K5
+
+rectangle "**6. Zaznana priložnost**\n//rezultat//\n==\nDA »R zmaga« @ 0,787 $ (Polymarket)\nNE »razlika ≥ 4« @ 0,162 $ (Kalshi)\n==\nstrošek 0,965 $ → **donos +3,6 %**" <<res>> as K6
+
+' 2x3: navzdol po levem stolpcu, prehod desno (brez nove vrstice),
+' navzdol po desnem stolpcu; skrite povezave poravnajo vrstice
+K1 -down-> K2
+K2 -down-> K3
+K4 -down-> K5
+K5 -down-> K6
+K1 -[hidden]right- K4
+K2 -[hidden]right- K5
+K3 -[hidden]right- K6
+@enduml
